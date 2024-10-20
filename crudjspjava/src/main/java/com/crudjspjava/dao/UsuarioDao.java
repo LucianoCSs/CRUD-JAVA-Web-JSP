@@ -26,6 +26,21 @@ public class UsuarioDao {
 		return con;
 	}
 	
+	public static int deletarUsuario(Usuario u) throws ClassNotFoundException {
+		int status = 0;
+		String delete = "delete from usuario where id = ?";
+		try {
+			Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(delete);
+			ps.setInt(1, u.getId());
+			status = ps.executeUpdate();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return status;
+	}
+	
 	public static int salvarUsuario(Usuario u) throws ClassNotFoundException {
 		int status = 0;
 		String insert = "insert into usuario(nome, password, email, sexo, pais) values(?,?,?,?,?)";
@@ -116,7 +131,29 @@ public class UsuarioDao {
 		return list;
 	}
 	
-	
+	public static List<Usuario> getRecords(int start, int total) throws ClassNotFoundException{
+		List<Usuario> list = new ArrayList<Usuario>();
+		String records = "select * from usuario limit " + (start) + "," + total;
+		try {
+			Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(records);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Usuario usuario = new Usuario();
+				usuario.setId(rs.getInt("id"));
+				usuario.setNome(rs.getString("nome"));
+				usuario.setPassword(rs.getString("password"));
+				usuario.setEmail(rs.getString("email"));
+				usuario.setSexo(rs.getString("sexo"));
+				usuario.setPais(rs.getString("pais"));
+				list.add(usuario);
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 	
 	
 	

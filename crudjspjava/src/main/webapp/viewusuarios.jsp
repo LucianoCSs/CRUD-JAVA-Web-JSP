@@ -14,8 +14,24 @@
 </head>
 <body>
 	<h1>Listagem de Usuários</h1>
+	
 	<% 
-	List<Usuario> list = UsuarioDao.getAllUsuarios();
+	String pageid = request.getParameter("page");
+	if(pageid==null){
+		pageid = "1";
+	}
+	int id = Integer.parseInt(pageid);
+	int total = 5;
+	
+	if(id==1){
+		id = id - 1;
+		id = id * total + 1;
+	}else{
+		
+	}
+	
+	// List<Usuario> list = UsuarioDao.getAllUsuarios();
+	List<Usuario> list = UsuarioDao.getRecords(id, total);
 	request.setAttribute("list", list);
 	%>
 	
@@ -39,10 +55,15 @@
 					<td>${usuario.getSexo()}</td>
 					<td>${usuario.getPais()}</td>
 					<td><a href="editform.jsp?id=${usuario.getId()}">Editar</a></td>
-					<td><a href="#">Excluir</a></td>
+					<td><a href="deleteusuario.jsp?id=${usuario.getId()}" class="btn btn-danger" onclick="return confirm('Confirma a exclusão desse usuário?')">Excluir</a></td>
 				</tr>
 			</c:forEach>
 	</table>
+	<br>
+	<a href="viewusuarios.jsp?page=1">1</a>
+	<a href="viewusuarios.jsp?page=2">2</a>	
+	<a href="viewusuarios.jsp?page=3">3</a>
+	
 	<br>
 	<a href="addusuarioform.jsp">Adicionar novo usuário</a>
 </body>
